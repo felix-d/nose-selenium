@@ -30,10 +30,6 @@ nosetests command line options
       --config-file         Load options from ConfigParser compliant config file.
                             Values in config file will override values sent on the
                             command line.
-      --browser-location=BROWSER_LOCATION
-                            Run the browser in this location (default ['local'],
-                            options [local, remote, grid, sauce]). May be stored
-                            in environmental variable SELENIUM_BROWSER_LOCATION.
       --browser=BROWSER     Run this type of browser (default ['FIREFOX'], options
                             for local [FIREFOX, INTERNETEXPLORER, CHROME], options
                             for remote/grid/sauce [ANDROID, CHROME, FIREFOX,
@@ -48,34 +44,15 @@ nosetests command line options
       --os=OS               Run the browser on this operating system. (default:
                             none, options [windows, mac, linux], required for grid
                             or sauce)
-      --grid-address=str    host that selenium grid is listening on. (default: [])
-                            May be stored in environmental variable
-                            SELENIUM_GRID_ADDRESS.
-      --grid-port=num       port that selenium grid is listening on. (default:
-                            4444)
-      --remote-address=str  host that remote selenium server is listening on. May
-                            be stored in environmental variable
-                            REMOTE_SELENIUM_ADDRESS.
-      --remote-port=num     port that remote selenium server is listening on.
-                            (default: 4444)
       --timeout=num         timeout (in seconds) for page loads, etc. (default:
                             60)
-      --sauce-username=str  username for sauce labs account. May be stored in
-                            environmental variable SAUCE_USERNAME.
-      --sauce-apikey=str    API Key for sauce labs account. May be stored in
-                            environmental variable SAUCE_APIKEY.
-      --saved-files-storage Full path to place to store screenshots and html dumps.
-                            May be stored in environmental variable SAVED_FILES_PATH.
 
 Example Commands
 ----------------
 
 .. code-block:: bash
 
-    $ nosetests --with-nose-selenium --browser-location=local --browser=FIREFOX
-    $ nosetests --with-nose-selenium --browser-location=grid --grid-address=192.168.0.11 --os=linux --browser=CHROME
-    $ nosetests --with-nose-selenium --browser-location=remote --remote-address=192.168.0.107 --browser=HTMLUNIT
-    $ nosetests --with-nose-selenium --browser-location=sauce --os=windows --browser=INTERNETEXPLORER --sauce-username=<name> --sauce-apikey=<api_key>
+    $ nosetests --with-nose-selenium --browser=FIREFOX
     $ nosetests --with-nose-selenium --config-file=selenium.conf
 
 
@@ -96,19 +73,11 @@ defaults.
 .. code-block:: bash
 
     [SELENIUM]
-    BROWSER_LOCATION: local
     BROWSER: FIREFOX
     BUILD:
     BROWSER_VERSION:
     OS:
-    # remote or grid address
-    REMOTE_ADDRESS:
-    # remote or grid port
-    REMOTE_PORT: 4444
     TIMEOUT: 60
-    SAUCE_USERNAME:
-    SAUCE_APIKEY:
-    SAVED_FILES_PATH:
 
 
 Inheriting from SeleniumTestCase
@@ -140,24 +109,6 @@ If you want screenshots and html to be captured for TimeoutException-s
 raised by WebDriverWait, use ScreenshotOnExceptionWebDriverWait in its
 place.
 
-Using build_webdriver in your test scripts
-------------------------------------------
-
-If you're not using test classes, you may use build_webdriver
-in the following manner. Its extra arguments are used to attach
-metadata to SauceLabs jobs and ignored if the browser is not being
-opened on SauceLabs.
-
-.. code-block:: python
-
-    from nose_selenium import build_webdriver
-
-    def test_that_google_opens():
-        wd = build_webdriver(name="google opens", tags=['sanity'], public=False)
-        wd.get('http://google.com')
-        assert wd.title == 'Google'
-        wd.halt()
-
 Using setup_selenium_from_config()
 ----------------------------------
 If you'd like to use ``ScreenshotOnExceptionWebDriver`` or
@@ -183,18 +134,3 @@ has read from this file. This will set up the variables so that
 
     If you use portions of this library without using nose, validity checking
     will not be performed.
-    
-Backwards Compatibility
-=======================
-
-As this code is in 'alpha' I will attempt but not promise backwards compatibility.
-Please leave me a note if you're using this plugin, as I am more likely to break
-backwards compatibility if I think I'm the only one using it.
-
-Bugs and Feature Requests
-=========================
-
-I am aware that this plugin represents a minimal set of features. If there is
-something in particular you would like me to add, please check the
-`issues list <http://github.com/klrmn/nose-selenium/issues>`_ and create new
-issues or leave comments in existing ones.
